@@ -7,11 +7,11 @@ assignees: ''
 
 ---
 
-**Description**
+**Beschreibung**
 
-*As XY I want to abc ...*
+*Als XY möchte ich abc ...*
 
-**acceptance criteria**
-- [ ] criteria 1
-- [ ] criteria 2
-- [ ] criteria 3
+**Akzeptanzkriterien**
+- [ ] Kriterium 1
+- [ ] Kriterium 2
+- [ ] Kriterium 3
