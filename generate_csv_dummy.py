@@ -1,5 +1,7 @@
 import time
 import random
+import csv
+import pathlib
 
 def current_milli_time():
     return round(time.time() * 1000)
@@ -32,14 +34,24 @@ def create_payload_sw():
 def create_csv(count):
     # get timestamp
     timestamp = current_milli_time()
+    # get script directory
+    script_dir = pathlib.Path().resolve()
+    
+    output_file = script_dir / f"{timestamp}.csv"
+
     # create file
-    with open(f".\output\{timestamp}.csv", "w") as f:
+    with open(output_file, "w", newline="") as f:
+        # create csv writer
+        writer = csv.writer(f, delimiter=";")
         # write header
-        f.write("time;opcode;param;payload\n")
+        writer.writerow(["time", "opcode", "param", "payload"])
         # write body
         for i in range(count):
-            line = f"{(i + 1) / 1000};0x58;{create_adress()};{create_payload_sw()}\n"
-            f.write(line)
+            time_val = (i + 1) / 1000
+            opcode = "0x58"
+            address = create_adress()
+            payload = create_payload_sw()
+            writer.writerow([time_val, opcode, address, payload])
 
 
 
