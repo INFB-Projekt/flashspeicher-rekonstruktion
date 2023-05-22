@@ -8,14 +8,14 @@ from zipfile import ZipFile
 parser = argparse.ArgumentParser(description="Script to create SD card images and archive them")
 parser.add_argument("--sd-card-path", required=True, help="Path to the SD card directory")
 parser.add_argument("--zip-file-path", required=True, help="Path to the archive file")
-parser.add_argument("--shellscript.location", required=True, help="Path to the shell script")
+parser.add_argument("--shellscript-location", required=True, help="Path to the shell script")
 parser.add_argument("--image-path", required=True, help="Path to the SD card image")
 
 args = parser.parse_args()
 
 sd_card_path = args.sd_card_path
 zip_file_path = args.zip_file_path
-shellscript_location = args.shellscript.location
+shellscript_location = args.shellscript_location
 image_path = args.image_path
 
 file_name = "example.txt"
