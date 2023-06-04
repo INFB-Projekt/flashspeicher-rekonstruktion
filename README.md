@@ -8,3 +8,13 @@ python sd_card_image_generator.py --sd-card-path /path/to/sd/card --zip-file-pat
 ````
 python sd_card_image_generator.py --help
 ````
+
+# reconstruction_dummy.py
+## usage
+### Execute filename.py from command line:
+````
+python reconstruction_dummy.py --reconstruction-path E:\\Vmshare --csv-path E:\\Vmshare\\CSV --image-name sdCard
+````
+### for further information run:
+````
+python reconstruction_dummy.py --help
