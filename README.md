@@ -20,3 +20,9 @@ python reconstruction_dummy.py --reconstruction-path E:\\Vmshare --csv-path E:\\
 #### for further information run:
 ````
 python reconstruction_dummy.py --help
+````
+## Tests
+Run following command in the root directory: 
+````
+python -m pytest
+````
