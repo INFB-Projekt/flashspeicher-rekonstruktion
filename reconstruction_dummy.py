@@ -103,5 +103,3 @@ if __name__ == "__main__":
             reconstruction(target_row, f'{csv_path}\\{csv_name}')
             break
 
-
-
