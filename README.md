@@ -27,7 +27,7 @@ python reconstruction_dummy.py --reconstruction-path E:\\Vmshare --csv-path E:\\
 python reconstruction_dummy.py --help
 ````
 ## Tests
-Run following command in the root directory: 
+#### Execute from command line: 
 ````
 pytest
 ````
