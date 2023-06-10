@@ -1,6 +1,6 @@
 import pytest
-from reconstruction_dummy import *
-import reconstruction_dummy
+from src.reconstruction_dummy import *
+from src import reconstruction_dummy
 import filecmp
 import shutil
 
@@ -34,7 +34,7 @@ def test_find_csv_file(input_value, expected_result):
 
 def test_find_target_row(input_value, expected_result):
     reconstruction_dummy.reconstruction_timestamp = input_value
-    target_csv = ".\\tests\\resources\\1684412541025.csv"
+    target_csv = "./tests/resources/1684412541025.csv"
     if(input_value == 1684412541000):
         with pytest.raises(Exception):
             find_target_row("1684412541025.csv", target_csv)
@@ -47,11 +47,11 @@ def test_find_target_row(input_value, expected_result):
 
 def test_reconstruction():
     
-    csv = ".\\tests\\resources\\test_trace.csv"
-    result = ".\\tests\\resources\\result_image.img"
-    copyImg = ".\\tests\\resources\\copyImg.img"
+    csv = "./tests/resources/test_trace.csv"
+    result = "./tests/resources/result_image.img"
+    copyImg = "./tests/resources/copyImg.img"
 
-    shutil.copy(".\\tests\\resources\\orgImg.img", copyImg)
+    shutil.copy("./tests/resources/orgImg.img", copyImg)
 
     reconstruction_dummy.image_path = copyImg
 
