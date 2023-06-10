@@ -1,7 +1,7 @@
 # flash memory reconstruction
 
 ## Prerequisites
-* python 3.10
+* python 3
 * pipenv installed ``pip install pipenv``
 * virtual environment created with ``pipenv install``
 
