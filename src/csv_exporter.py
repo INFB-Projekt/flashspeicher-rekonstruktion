@@ -42,7 +42,7 @@ class Exporter():
 
 
     def _get_elements_as_list(self, command : Command) -> list[str]:
-        relative_time = str(command.relativ_time)
+        relative_time = str(command.relative_time)
         opcode = str(command.opcode)
         parameter = str(command.parameter)
         payload = str(command.payload)

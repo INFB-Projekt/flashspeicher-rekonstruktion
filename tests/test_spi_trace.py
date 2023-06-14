@@ -19,7 +19,7 @@ def test_incorrect_init_trace():
 def get_correct_command_instance(mocker) -> Command:
     instruction = Instruction(hex(0x58), hex(0x000000), hex(0x00))
     payload = [Payload(hex(0x000000), hex(0x00))]
-    return Command(relativ_time=0.001, instruction=instruction, payload=payload)
+    return Command(relative_time=0.001, instruction=instruction, payload=payload)
 
 
 def get_correct_trace_instance() -> Trace:

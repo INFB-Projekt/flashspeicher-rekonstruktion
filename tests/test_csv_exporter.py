@@ -72,7 +72,7 @@ class Test_Exporter:
             body = lines[1].replace("\n", "")
 
         correct_header = ["time", "opcode", "param", "payload"]
-        correct_body = [str(command.relativ_time),
+        correct_body = [str(command.relative_time),
                         str(command.opcode),
                         str(command.parameter),
                         str(command.payload)]
