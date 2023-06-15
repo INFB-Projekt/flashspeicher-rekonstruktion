@@ -20,7 +20,7 @@ python sd_card_image_generator.py --help
 ### reconstruction_dummy.py
 #### Execute from command line:
 ````
-python reconstruction_dummy.py --reconstruction-path E:\\Vmshare --csv-path E:\\Vmshare\\CSV --image-name sdCard
+python reconstruction_dummy.py --image-path E:\Vmshare\sdCard.img --csv-path E:\Vmshare\CSV --date 18.05.2023 --time 14:22:02
 ````
 #### for further information run:
 ````
