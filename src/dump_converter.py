@@ -1,7 +1,6 @@
 import pandas as pd
 from time import time
 
-
 from utils import two_digit_hex_str
 from crc import CRC
 from spi_command import Instruction, Command, Payload
@@ -51,14 +50,18 @@ class Dump:
             "MOSI": mosi
         }
 
+        # in case dump ends so that number of bin digits mod 8 != 0 --> throw away last ones
+        if len(dump_dict["time"]) != len(dump_dict["MISO"]) or len(dump_dict["time"]) != len(dump_dict["MOSI"]):
+            dump_dict["time"] = dump_dict["time"][:-1]
         return pd.DataFrame(dump_dict)
 
     def extract_writes(self) -> Trace:
         potential_writes = self.hex[self.hex["MOSI"].isin(["0x58", "0x59"])]
+        print("found", len(potential_writes), "potential writes")
         for index, row in potential_writes.iterrows():
             # TODO: differentiate between single and multi block
             # wait for start token
-            max_index = index + 64  # randomly assume that there is a max of 64 bytes of noise before start token is sent
+            max_index = index + 128  # randomly assume that there is a max of 128 bytes of noise before start token is sent
             start_token_loc = 0
             for i in range(index, max_index):
                 try:
@@ -69,7 +72,7 @@ class Dump:
                     start_token_loc = i
                     break
             if start_token_loc <= 0:
-                continue  # no start token found with 64 clock ticks --> continue with next write
+                continue  # no start token found within 128 bytes --> continue with next potential write
             payload_len = 512
             payload_df = self.hex.loc[start_token_loc + 1:start_token_loc + payload_len]
             # print("start token loc", start_token_loc, "crc loc:", (start_token_loc + payload_len + 1))
@@ -98,7 +101,7 @@ class Dump:
 
 
 if __name__ == "__main__":
-    d = Dump("../resources/in/spi_trace.csv")
+    d = Dump("../resources/in/hw.csv")
     d.export("../resources/out/a.csv")
     trace = d.extract_writes()
     print("found", len(trace), "valid writes:", trace)
