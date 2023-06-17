@@ -16,16 +16,15 @@ def test_incorrect_init_trace():
         Trace(str(1234567890))
 
 
-def get_correct_command_instance(mocker) -> Command:
-    instruction = Instruction(hex(0x58), hex(0x000000), hex(0x00))
-    payload = [Payload(hex(0x000000), hex(0x00))]
+def get_correct_command_instance() -> Command:
+    instruction = Instruction(hex(0x58), hex(0xc0ffee), hex(0x92))
+    payload = [Payload(hex(0x1234567890), hex(0xad))]
     return Command(relative_time=0.001, instruction=instruction, payload=payload)
 
 
 def get_correct_trace_instance() -> Trace:
     return Trace(1234567890)
 
-@pytest.mark.skip(reason="Der Test noch nicht möglich da CRC fehlt (Keine Command Instanziierung möglich)")
 def get_filled_trace() -> Trace:
     trace = get_correct_trace_instance()
 
@@ -34,7 +33,6 @@ def get_filled_trace() -> Trace:
 
     return trace
 
-@pytest.mark.skip(reason="Der Test noch nicht möglich da CRC fehlt (Keine Command Instanziierung möglich)")
 def test_append_spi_command():
     command = get_correct_command_instance()
     trace = get_correct_trace_instance()
@@ -52,7 +50,6 @@ def test_append_false_type():
     with pytest.raises(TypeError):
         trace.append(any)
 
-@pytest.mark.skip(reason="Der Test noch nicht möglich da CRC fehlt (Keine Command Instanziierung möglich)")
 def test_insert_spi_command():
     command = get_correct_command_instance()
     filledTrace = get_filled_trace()
