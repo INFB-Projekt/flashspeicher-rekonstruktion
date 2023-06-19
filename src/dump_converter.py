@@ -80,10 +80,12 @@ class Dump:
             for _, x in payload_df.iterrows():
                 payload += x["MOSI"][2:]
             try:
+                print("crc:", self.hex.loc[start_token_loc + payload_len + 1])
+                print(CRC.calc(payload))
                 is_valid_crc = CRC.is_valid(payload, self.hex.loc[start_token_loc + payload_len + 1]["MOSI"])
             except (ValueError, KeyError):
                 continue
-            is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO remove this once using not flat 0x00 as crc
+            # is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO remove this once using not flat 0x00 as crc
             if is_valid_crc:
                 time = self.hex.loc[index]["time"]
                 opcode = self.hex.loc[index]["MOSI"]
