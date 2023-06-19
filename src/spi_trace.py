@@ -1,5 +1,5 @@
 from collections.abc import Iterable
-from spi_command import Command
+from src.spi_command import Command
 
 
 class Trace(list):
