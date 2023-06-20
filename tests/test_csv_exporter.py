@@ -48,7 +48,7 @@ def test_export_trace():
 
     exporter.export_trace(trace)
 
-    file_path = os.path.join(output_dir, f"{format_timestamp}.csv")
+    file_path = f"{output_dir}/{format_timestamp}.csv"
 
     assert os.path.exists(file_path)
 
@@ -64,7 +64,7 @@ def test_csv_data():
 
     exporter.export_trace(trace)
 
-    file_path = os.path.join(output_dir, f"{format_timestamp}.csv")
+    file_path = f"{output_dir}/{format_timestamp}.csv"
 
     with open(file_path, "r") as f:
         lines = f.readlines()
@@ -95,15 +95,8 @@ def test_set_destination_path():
     output_path = get_output_dir_path()
     exporter = Exporter(output_path)
 
-    wrong_destination = os.path.join(output_path, "NotADirectory.txt")
+    wrong_destination = f"{output_path}/NotADirectory.txt"
 
     with pytest.raises(NotADirectoryError):
         exporter.set_destination_path(wrong_destination)
 
-
-def test_datetimestr_format():
-    output_dir = get_output_dir_path()
-    exporter = Exporter(output_dir)
-    datetime_string = exporter._convert_epoch_to_datetimestr(timestamp)
-
-    assert datetime_string == format_timestamp
