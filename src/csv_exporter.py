@@ -2,6 +2,7 @@ from src.spi_trace import Trace
 from src.spi_command import Command
 import csv
 from os import path, makedirs
+from datetime import datetime
 
 class Exporter():
 
@@ -10,8 +11,9 @@ class Exporter():
         
         
     def export_trace(self, trace : Trace) -> None:
-        output_file = path.join(self._destination_path, f"{trace.time}.csv")
-        self._create_directories()
+        datetime_timestamp = self._convert_epoch_to_datetimestr(trace.time)
+        output_file = path.join(self._destination_path, f"{datetime_timestamp}.csv")
+        self._create_missing_directories()
         
         with open(output_file, "w", newline='') as f:
             writer = csv.writer(f, delimiter=';')
@@ -27,16 +29,19 @@ class Exporter():
     def set_destination_path(self, path : str) -> None:
         self._destination_path = self._validate_path(path)
 
-
+    def _convert_epoch_to_datetimestr(self, epoch_time : int) -> datetime:
+        datetime_object = datetime.fromtimestamp(epoch_time)
+        milliseconds = datetime_object.microsecond // 1000
+        return datetime_object.strftime("%Y-%m-%dT%H_%M_%SS") + f"{milliseconds:03d}"
 
     def _validate_path(self, path_to_validate : str) -> str:
-        if not '.' in path.basename(path_to_validate):
+        if path.isdir(path_to_validate):
             return path_to_validate
         raise NotADirectoryError(
             f"{path_to_validate} need to be a path to a directory"
         )
 
-    def _create_directories(self):
+    def _create_missing_directories(self):
         if not path.exists(self._destination_path):
             makedirs(self._destination_path)
 

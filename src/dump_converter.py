@@ -11,7 +11,7 @@ class Dump:
     def __init__(self, path: str = "../resources/in/spi_trace.csv"):
         self.binary = pd.read_csv(path)
         self.hex = self._to_hex()
-        self.trace = Trace(int(time()))
+        self.trace = Trace(time())
 
     def _to_hex(self) -> pd.DataFrame:
         self.binary["Channel 2"] = pd.to_numeric(self.binary["Channel 2"], errors='raise').astype('Int32')

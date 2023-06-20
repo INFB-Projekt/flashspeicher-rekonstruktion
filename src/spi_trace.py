@@ -1,11 +1,12 @@
 from collections.abc import Iterable
 from src.spi_command import Command
+from datetime import datetime
 
 
 class Trace(list):
-    def __init__(self, start_time : int) -> None:
+    def __init__(self, start_time : float) -> None:
         super().__init__()
-        self.time = self._validate_type(start_time, int)
+        self.time = self._validate_type(start_time, (float, int))
         
     def __setitem__(self, index : int, spicommand : Command) -> None:
         super().__setitem__(index, self._validate_type(spicommand, Command))
@@ -16,9 +17,6 @@ class Trace(list):
     def append(self, spicommand : Command) -> None:
         super().append(self._validate_type(spicommand, Command))
 
-    """
-    Remove Extend Funktion, problematisch wegen dem Zeitstempel. Welchen Zeitstempel wollen wir nehmen?
-    """ 
     def extend(self, other: Iterable) -> None:
         if isinstance(other, type(self)):
             super().extend(other)
