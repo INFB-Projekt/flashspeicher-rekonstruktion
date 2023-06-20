@@ -8,7 +8,7 @@ from src.spi_command import Command, Instruction, Payload
 
 # hardcoded variables for testing
 timestamp = 1687262365.089078
-format_timestamp = '2023-06-20T13_59_25S089'
+format_timestamp = '2023-06-20T11_59_25S089'
 
 # Help Functions
 def get_filled_trace(size: int = 10) -> Trace:
