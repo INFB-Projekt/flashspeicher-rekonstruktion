@@ -32,11 +32,7 @@ def remove_old_test_file() -> None:
         os.remove(file_path)
 
 def get_output_dir_path() -> str:
-    current_dir = os.path.dirname(os.path.abspath(__file__))
-
-    dir_name = "resources"
-
-    return os.path.join(current_dir, dir_name)
+    return "./tests/resources"
 
 
 
