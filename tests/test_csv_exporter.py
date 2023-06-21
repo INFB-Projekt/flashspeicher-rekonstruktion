@@ -3,12 +3,19 @@ import pytest
 from src.spi_trace import Trace
 from src.csv_exporter import Exporter
 from src.spi_command import Command, Instruction, Payload
+from datetime import datetime
 
+
+def get_formated_timestamp_string(epoch_time : float) -> str:
+    datetime_object = datetime.fromtimestamp(epoch_time)
+    milliseconds = datetime_object.microsecond // 1000
+    return datetime_object.strftime("%Y-%m-%dT%H_%M_%SS") + f"{milliseconds:03d}"
 
 
 # hardcoded variables for testing
 timestamp = 1687262365.089078
-format_timestamp = '2023-06-20T11_59_25S089'
+format_timestamp = get_formated_timestamp_string(timestamp)
+
 
 # Help Functions
 def get_filled_trace(size: int = 10) -> Trace:

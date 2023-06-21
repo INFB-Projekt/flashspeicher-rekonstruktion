@@ -29,7 +29,7 @@ class Exporter():
     def set_destination_path(self, path : str) -> None:
         self._destination_path = self._validate_path(path)
 
-    def _convert_epoch_to_datetimestr(self, epoch_time : int) -> datetime:
+    def _convert_epoch_to_datetimestr(self, epoch_time : float) -> str:
         datetime_object = datetime.fromtimestamp(epoch_time)
         milliseconds = datetime_object.microsecond // 1000
         return datetime_object.strftime("%Y-%m-%dT%H_%M_%SS") + f"{milliseconds:03d}"
