@@ -11,7 +11,7 @@ class Dump:
     def __init__(self, path: str = "../resources/in/spi_trace.csv"):
         self.binary = pd.read_csv(path)
         self.hex = self._to_hex()
-        self.trace = Trace(int(time()))
+        self.trace = Trace(time())
 
     def _to_hex(self) -> pd.DataFrame:
         self.binary["Channel 2"] = pd.to_numeric(self.binary["Channel 2"], errors='raise').astype('Int32')
@@ -24,9 +24,11 @@ class Dump:
         miso_bits = str()
         mosi_bits = str()
 
+        predecessor_clock = -1
+
         for _, row in self.binary.iterrows():
             # print(bit_counter, row["Channel 2"], (bit_counter < 8 and row['Channel 2'] == 1))
-            if bit_counter < 8 and row['Channel 2'] == 1:
+            if bit_counter < 8 and row['Channel 2'] == 1 and predecessor_clock == 0:
                 miso_bits = miso_bits + str(int(row['Channel 0']))
                 mosi_bits = mosi_bits + str(int(row['Channel 1']))
                 # print("added some bits:", row["Channel 0"], row["Channel 1"], miso_bits, mosi_bits)
@@ -34,6 +36,7 @@ class Dump:
 
                 if bit_counter == 1:
                     time.append(row['Time [s]'])
+                    predecessor_clock = int(row["Channel 2"])
                     continue
             # print("MISO:", miso_bits, "MOSI:", mosi_bits)
 
@@ -43,6 +46,8 @@ class Dump:
                 miso_bits = ""
                 mosi_bits = ""
                 bit_counter = 0
+            
+            predecessor_clock = int(row["Channel 2"])
 
         dump_dict = {
             "time": time,

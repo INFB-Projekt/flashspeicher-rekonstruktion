@@ -87,3 +87,15 @@ def test_extend_false_type():
     with pytest.raises(TypeError):
         first_trace.extend(any_list)
 
+
+def test_extend_list_of_commands():
+    command_list = []
+    for i in range(10):
+        command_list.append(get_correct_command_instance())
+
+    trace = get_correct_trace_instance()
+
+    trace.extend(command_list)
+
+    assert len(trace) == 10
+
