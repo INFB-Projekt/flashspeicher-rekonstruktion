@@ -85,7 +85,7 @@ class Dump:
                 is_valid_crc = CRC.is_valid(payload, self.hex.loc[start_token_loc + payload_len + 1]["MOSI"])
             except (ValueError, KeyError):
                 continue
-            # is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO remove this once using not flat 0x00 as crc
+            is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO remove this once using not flat 0x00 as crc
             if is_valid_crc:
                 time = self.hex.loc[index]["time"]
                 opcode = self.hex.loc[index]["MOSI"]
@@ -103,7 +103,7 @@ class Dump:
 
 
 if __name__ == "__main__":
-    d = Dump("../resources/in/hw.csv")
+    d = Dump("../resources/in/spi_trace.csv")
     d.export("../resources/out/a.csv")
     trace = d.extract_writes()
     print("found", len(trace), "valid writes:", trace)
