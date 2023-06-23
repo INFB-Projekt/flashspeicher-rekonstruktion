@@ -7,14 +7,6 @@
 
 
 ## Usage
-### shellscript_sd_card_to_img.sh
-#### Description:
-This shell script can create an image of any storage device on Linux.
-Make sure to change the variables in the script itself.
-#### Execute from command line:
-````
-./shellscript_sd_card_to_img.sh
-````
 ### sd_card_image_generator.py
 #### Description:
 This script creates and writes to a text file. It can also optionally automatically create a image after each step. It is used to easily create a predictable trace for testing purposes.
@@ -32,7 +24,7 @@ python sd_card_image_generator.py --help
 This script offers a convenient and efficient way to reconstruct data given a SD-Card image and a folder of CSV trace files based on a user-specified timestamp.
 #### Execute from command line:
 ````
-python trace_reconstruction.py --image-path E:\Vmshare\sdCard.img --csv-path E:\Vmshare\CSV --date 18.05.2023 --time 14:22:02
+python trace_reconstruction.py --image-path /path/to/.img-file --csv-path path/to/csv --date DD.MM.YYYY --time HH:MM:SS
 ````
 #### for further information run:
 ````
