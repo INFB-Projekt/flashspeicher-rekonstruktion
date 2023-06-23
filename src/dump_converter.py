@@ -1,14 +1,14 @@
 import pandas as pd
 from time import time
 
-from utils import two_digit_hex_str
-from crc import CRC
-from spi_command import Instruction, Command, Payload
-from spi_trace import Trace
+from src.utils import two_digit_hex_str
+from src.crc import CRC
+from src.spi_command import Instruction, Command, Payload
+from src.spi_trace import Trace
 
 
 class Dump:
-    def __init__(self, path: str = "../resources/in/spi_trace.csv"):
+    def __init__(self, path: str):
         self.binary = pd.read_csv(path)
         self.hex = self._to_hex()
         self.trace = Trace(time())
@@ -55,7 +55,7 @@ class Dump:
             "MOSI": mosi
         }
 
-        # in case dump ends so that number of bin digits mod 8 != 0 --> throw away last ones
+        # bin case dump ends so that number of bin digits mod 8 != 0 --> throw away last ones
         if len(dump_dict["time"]) != len(dump_dict["MISO"]) or len(dump_dict["time"]) != len(dump_dict["MOSI"]):
             dump_dict["time"] = dump_dict["time"][:-1]
         return pd.DataFrame(dump_dict)
@@ -77,6 +77,7 @@ class Dump:
                     start_token_loc = i
                     break
             if start_token_loc <= 0:
+                # print("no start token found for", row)
                 continue  # no start token found within 128 bytes --> continue with next potential write
             payload_len = 512
             payload_df = self.hex.loc[start_token_loc + 1:start_token_loc + payload_len]
@@ -85,12 +86,14 @@ class Dump:
             for _, x in payload_df.iterrows():
                 payload += x["MOSI"][2:]
             try:
-                print("crc:", self.hex.loc[start_token_loc + payload_len + 1])
-                print(CRC.calc(payload))
-                is_valid_crc = CRC.is_valid(payload, self.hex.loc[start_token_loc + payload_len + 1]["MOSI"])
-            except (ValueError, KeyError):
+                #print("crc:", self.hex.loc[start_token_loc + payload_len + 1]["MOSI"])
+                #print(CRC.calc(payload))
+                is_valid_crc = CRC.is_valid(payload, self.hex.loc[start_token_loc + payload_len + 1]["MOSI"][2:])
+                print("crc valid:", is_valid_crc)
+            except KeyError:
                 continue
-            is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO remove this once using not flat 0x00 as crc
+            # is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO: uncomment this to analyze example dumps from resources/gen.py
+            # is_valid_crc = True  # TODO: uncomment this to pass tests
             if is_valid_crc:
                 time = self.hex.loc[index]["time"]
                 opcode = self.hex.loc[index]["MOSI"]
@@ -98,7 +101,8 @@ class Dump:
                 params = "0x"
                 for _, x in param_df.iterrows():
                     params += x["MOSI"][2:]
-                instruction = Instruction(opcode, params, CRC.calc(opcode[2:] + params[2:].upper()))  # TODO: use actual crc here
+                print("valid write found at", row["time"])
+                instruction = Instruction(opcode, params, CRC.calc(opcode[2:] + params[2:]))  # TODO: use actual crc here
                 command = Command(time, instruction, [Payload(payload, CRC.calc(payload))])
                 self.trace.append(command)
         return self.trace
@@ -108,7 +112,9 @@ class Dump:
 
 
 if __name__ == "__main__":
-    d = Dump("../resources/in/spi_trace.csv")
-    d.export("../resources/out/a.csv")
+    # Dump("../resources/bin/2023-06-19T16-52-51s561826.csv")
+    fname = "2023-06-19T16-52-51s561826.csv"
+    d = Dump(f"../resources/bin/{fname}")
+    d.export(f"../resources/hex/{fname}")
     trace = d.extract_writes()
     print("found", len(trace), "valid writes:", trace)

@@ -8,10 +8,10 @@ class Instruction:
         self.parameter = parameter
 
     def _check_crc(self, opcode : hex, parameter : hex, crc : hex) -> None:
-        concatenate_hex = self._concatenate_hex(opcode, parameter)
+        concatenated_hex = self._concatenate_hex(opcode, parameter)
         
-        if not CRC.is_valid(concatenate_hex, crc):
-            raise Exception (
+        if not CRC.is_valid(concatenated_hex, crc):
+            raise Exception(
                 "CRC is not valid"
             )
  

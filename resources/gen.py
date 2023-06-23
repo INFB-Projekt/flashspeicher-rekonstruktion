@@ -18,7 +18,7 @@ class data_package:
 
 
 def generate():
-    csv_file = open('in/spi_trace.csv', 'w', newline='')
+    csv_file = open('bin/spi_trace.csv', 'w', newline='')
     csv_writer = csv.writer(csv_file)
     csv_writer.writerow(["Time [s]", "Channel 0", "Channel 1", "Channel 2"])  # Channel 0 = MISO, Channl 1 = MOSI
 
@@ -70,7 +70,7 @@ def write_csv(cp: command_package, dp: data_package, csv_writer):
     for i in range(randint(0, 2)):  # random noise
         write_bits("0xff", "0xff", csv_writer)
 
-    write_bits("0x40", "0xff", csv_writer)  # set idle state?? is this according to the protocol? Isn't idle stat only set once in the beginning?
+    write_bits("0x40", "0xff", csv_writer)  # set idle state?? is this according to the protocol? Isn't idle stat only set once bin the beginning?
 
     for i in range(randint(0, 2)):  # random noise??
         write_bits("0xff", "0xff", csv_writer)
