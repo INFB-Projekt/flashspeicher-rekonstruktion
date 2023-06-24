@@ -8,6 +8,8 @@
 
 ## Usage
 ### sd_card_image_generator.py
+#### Description:
+This script creates and writes to a text file. It can also optionally automatically create a image after each step. It is used to easily create a predictable trace for testing purposes.
 #### Execute from command line:
 ````
 python sd_card_image_generator.py --sd-card-path /path/to/sd/card --zip-file-path /path/to/archive.zip --shellscript-location /path/to/createImage.sh --image-path /path/to/sdCard.img
@@ -17,14 +19,16 @@ python sd_card_image_generator.py --sd-card-path /path/to/sd/card --zip-file-pat
 python sd_card_image_generator.py --help
 ````
 
-### reconstruction_dummy.py
+### trace_reconstruction.py
+#### Description:
+This script offers a convenient and efficient way to reconstruct data given a SD-Card image and a folder of CSV trace files based on a user-specified timestamp.
 #### Execute from command line:
 ````
-python reconstruction_dummy.py --reconstruction-path E:\\Vmshare --csv-path E:\\Vmshare\\CSV --image-name sdCard
+python trace_reconstruction.py --image-path /path/to/.img-file --csv-path path/to/csv --date DD.MM.YYYY --time HH:MM:SS
 ````
 #### for further information run:
 ````
-python reconstruction_dummy.py --help
+python trace_reconstruction.py --help
 ````
 ## Tests
 #### Execute from command line: 
