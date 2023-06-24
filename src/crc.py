@@ -1,7 +1,17 @@
+import sys
+
 import crcmod
+from loguru import logger
 
 
 class CRC:
+    def __init__(self, log=None):
+        if log is None:
+            logger.remove()  # All configured handlers are removed
+            logger.add(sys.stderr, format="<green>{time:HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | "
+                                          "<cyan>{function}</cyan>:<cyan>{line}</cyan>: <level>{message}</level>",
+                       level="ERROR")
+
     @staticmethod
     def calc(data: str) -> str:
         if data.startswith("0x"):
@@ -60,12 +70,12 @@ class CRC:
 
     @staticmethod
     def is_valid(data: str, crc: str) -> bool:
-        print("calc crc of", data)
-        print("crc should be", crc)
+        logger.debug(f"trying to validate crc of {data}")
+        logger.debug(f"crc should be {crc}")
         data = data.replace("0x", "")
         crc = crc.replace("0x", "").lower()
         calculated_crc = CRC.calc(data).lower()
-        print("calculated crc:", calculated_crc)
+        logger.debug(f"calculated crc: {calculated_crc}")
         return crc == calculated_crc
 
 
