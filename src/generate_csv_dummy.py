@@ -30,6 +30,16 @@ def create_payload_sw():
     payload = hex(random.randint(0, max_value))
     return format_hex(1024, payload)
 
+def calculate_crc(payload) -> str:
+    crc8_func = crcmod.predefined.mkPredefinedCrcFun('crc-8')
+    # Entferne das "0x" am Anfang, falls vorhanden
+    if payload.startswith("0x"):
+        payload = payload[2:]
+    message = bytearray.fromhex(payload)
+    crc = crc8_func(message)
+    # Konvertiere den CRC-Wert in hexadezimale Wert
+    crc_hex = hex(crc)[2:].zfill(2)
+    return crc_hex.upper()
 
 def create_csv(count):
     # get timestamp
@@ -51,7 +61,8 @@ def create_csv(count):
             opcode = "0x58"
             address = create_adress()
             payload = create_payload_sw()
-            writer.writerow([time_val, opcode, address, payload])
+            crc = calculate_crc(payload)
+            writer.writerow([time_val, opcode, address, payload+crc])
 
 
 
