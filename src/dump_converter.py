@@ -3,6 +3,7 @@ import pandas as pd
 from time import time
 from loguru import logger
 
+from src.csv_exporter import Exporter
 from src.utils import two_digit_hex_str
 from src.crc import CRC
 from src.spi_command import Instruction, Command, Payload
@@ -133,3 +134,6 @@ if __name__ == "__main__":
     d = Dump(f"../resources/bin/{fname}")
     d.export(f"../resources/hex/{fname}")
     trace = d.extract_writes()
+    exporter = Exporter("../resources/filtered_trace")
+    exporter.export_trace(trace)
+    
