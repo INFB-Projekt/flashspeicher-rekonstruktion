@@ -5,7 +5,7 @@ from src.dump_converter import *
 # test single- and multi-block writes separately to better see where the error would be
 # the bin to hex converter is implicitly also tested through this.
 # It will only yield the correct amount of writes if the bin to hex is (somewhat) correct
-path_to_dumps = "/resources/hex/"  # change this to "resources/bin" to also implicitly test the bin to hex converter
+path_to_dumps = "resources/hex/"  # change this to "resources/bin" to also implicitly test the bin to hex converter
 
 bin_fname_to_amount_multi_block_writes = {  # amount of writes found by manually analyzing of the .sal trace
     "2023-06-19T16-53-09s180550.csv": 1,
