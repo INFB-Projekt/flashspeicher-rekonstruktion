@@ -1,5 +1,4 @@
 import sys
-
 import crcmod
 from loguru import logger
 
