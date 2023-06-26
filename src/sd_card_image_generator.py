@@ -21,7 +21,7 @@ image_path = args.image_path
 file_name = "example.txt"
 dir_name = "/testDirectory"
 
-#delay in seconds (float)
+#delay bin seconds (float)
 delay = 2
 #create image (yes / no)
 should_create_image = "yes"

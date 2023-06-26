@@ -4,6 +4,9 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
+crcmod = "*"
+pandas = "*"
+loguru = "*"
 
 [dev-packages]
 pytest = "~=7.3.1"

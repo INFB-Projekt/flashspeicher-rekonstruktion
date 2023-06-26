@@ -1,12 +1,12 @@
 #!/bin/bash
 
-# Pfad zur SD-Karte festlegen (in diesem Beispiel /dev/mmcblk0)
+# Pfad zur SD-Karte festlegen (bin diesem Beispiel /dev/mmcblk0)
 SD_KARTE="/dev/mmcblk0"
 
-# Pfad zum Speichern des Image-Dateisystems festlegen (in diesem Beispiel /home/pi/images)
+# Pfad zum Speichern des Image-Dateisystems festlegen (bin diesem Beispiel /home/pi/images)
 IMAGE_SPEICHERORT="/home/pi/images"
 
-# Name des Image-Dateisystems festlegen (in diesem Beispiel raspbian.img)
+# Name des Image-Dateisystems festlegen (bin diesem Beispiel raspbian.img)
 IMAGE_NAME="raspbian.img"
 
 # Dateisystem der SD-Karte aushängen, falls es bereits gemountet ist
