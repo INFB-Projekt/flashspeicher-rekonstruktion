@@ -12,8 +12,9 @@ def test_incorrect_init_trace():
     with pytest.raises(TypeError):
         Trace()
 
-    with pytest.raises(TypeError):
-        Trace(str(1234567890))
+    with pytest.raises(ValueError):
+        # init trace with false format
+        Trace("2023-06-19T16:52:37s12345")
 
 
 def get_correct_command_instance() -> Command:

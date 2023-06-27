@@ -1,8 +1,8 @@
-from src.spi_trace import Trace
-from src.spi_command import Command
 import csv
 from os import path, makedirs
-from datetime import datetime
+
+from src.spi_trace import Trace
+from src.spi_command import Command
 
 class Exporter():
 
@@ -11,7 +11,7 @@ class Exporter():
         
         
     def export_trace(self, trace : Trace) -> None:
-        datetime_timestamp = self._convert_epoch_to_datetimestr(trace.time)
+        datetime_timestamp = trace.time
         output_file = path.join(self._destination_path, f"{datetime_timestamp}.csv")
         self._create_missing_directories()
         
@@ -29,10 +29,7 @@ class Exporter():
     def set_destination_path(self, path : str) -> None:
         self._destination_path = self._validate_path(path)
 
-    def _convert_epoch_to_datetimestr(self, epoch_time : float) -> str:
-        datetime_object = datetime.fromtimestamp(epoch_time)
-        milliseconds = datetime_object.microsecond // 1000
-        return datetime_object.strftime("%Y-%m-%dT%H_%M_%SS") + f"{milliseconds:03d}"
+
 
     def _validate_path(self, path_to_validate : str) -> str:
         if path.isdir(path_to_validate):

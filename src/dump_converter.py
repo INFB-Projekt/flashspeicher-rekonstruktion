@@ -1,4 +1,5 @@
 import sys
+import os
 import pandas as pd
 from time import time
 from loguru import logger
@@ -27,7 +28,20 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
             self.binary = pd.read_csv(path)
             logger.info("converting to hex, this may take a while")
             self.hex = self._to_hex()
-        self.trace = Trace(time())
+        
+        try:
+            self.trace = Trace(self._get_timestamp_from_path(path))
+        except ValueError as e:
+            # ValueError-Exception contains given datetime string and expected datetime format 
+            logger.debug(str(e))
+            logger.info("set the time of the trace to the current time")
+            self.trace = Trace(time())
+
+    def _get_timestamp_from_path(self, path : str) -> str:
+        filename = os.path.basename(path)
+        # remove extension from filename to get the timestamp
+        return os.path.splitext(filename)[0]
+        
 
     def _to_hex(self) -> pd.DataFrame:
         self.binary["Channel 2"] = pd.to_numeric(self.binary["Channel 2"], errors='raise').astype('Int32')
@@ -168,10 +182,3 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
         logger.info(f"exported hex dump to {path}")
 
 
-if __name__ == "__main__":
-    fname = "2023-06-19T16-52-51s561826.csv"
-    d = Dump(f"../resources/hex/{fname}", is_hex=True)
-    # d.export(f"../resources/hex/{fname}")
-    trace = d.extract_writes()
-    exporter = Exporter("../resources/filtered_trace")
-    exporter.export_trace(trace)

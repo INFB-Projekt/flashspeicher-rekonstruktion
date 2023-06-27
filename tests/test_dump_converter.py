@@ -8,21 +8,21 @@ from src.dump_converter import *
 path_to_dumps = "resources/hex/"  # change this to "resources/bin" to also implicitly test the bin to hex converter
 
 bin_fname_to_amount_multi_block_writes = {  # amount of writes found by manually analyzing of the .sal trace
-    "2023-06-19T16-53-09s180550.csv": 1,
-    "2023-06-19T16-53-20s861052.csv": 2,
-    "2023-06-19T16-53-30s004624.csv": 2,
-    "2023-06-19T16-54-09s942272.csv": 1,
+    "2023-06-19T16_53_09S180.csv": 1,
+    "2023-06-19T16_53_20S861.csv": 2,
+    "2023-06-19T16_53_30S004.csv": 2,
+    "2023-06-19T16_54_09S942.csv": 1,
 }
 
 bin_fname_to_amount_single_block_writes = {  # amount of writes found by manually analyzing of the .sal trace
-    "2023-06-19T16-52-37s927030.csv": 4,
-    "2023-06-19T16-52-51s561826.csv": 4,
-    "2023-06-19T16-52-58s817711.csv": 4,
-    "2023-06-19T16-53-09s180550.csv": 6,  # 6 without multi-block write
-    "2023-06-19T16-53-20s861052.csv": 4,  # 4 without multi
-    "2023-06-19T16-53-30s004624.csv": 5,  # 5 without multi
-    "2023-06-19T16-53-51s010233.csv": 8,
-    "2023-06-19T16-54-09s942272.csv": 7,  # 7 without multi
+    "2023-06-19T16_52_37S927.csv": 4,
+    "2023-06-19T16_52_51S561.csv": 4,
+    "2023-06-19T16_52_58S817.csv": 4,
+    "2023-06-19T16_53_09S180.csv": 6,  # 6 without multi-block write
+    "2023-06-19T16_53_20S861.csv": 4,  # 4 without multi
+    "2023-06-19T16_53_30S004.csv": 5,  # 5 without multi
+    "2023-06-19T16_53_51S010.csv": 8,
+    "2023-06-19T16_54_09S942.csv": 7,  # 7 without multi
 }
 
 
