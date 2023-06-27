@@ -6,7 +6,7 @@ from csv_exporter import Exporter
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--logger_level', default="INFO", choices={"ERROR", "INFO", "DEBUG"}, help='ERROR = no logs, INFO = basic info (default), DEBUG = ultimate info')
-    parser.add_argument('--hex', default=False, action='store_true')
+    parser.add_argument('--hex', default=False, action='store_true', help='uses already converted hex files for analyzing')
     parser.add_argument('--fname', required=True, help='Filename of trace which should be analyzed')
 
     args = parser.parse_args()
