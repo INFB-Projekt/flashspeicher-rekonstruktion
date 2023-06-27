@@ -11,7 +11,7 @@ from src.spi_trace import Trace
 
 
 class Dump:  # creating a Dump instance from binary may take a while for converting it to hex
-    def __init__(self, path: str, level: str, is_hex=False):
+    def __init__(self, path: str, level="INFO", is_hex=False):
         logger.remove()  # All configured handlers are removed
         logger.add(sys.stderr, format="<green>{time:HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | "
                               "<cyan>{function}</cyan>:<cyan>{line}</cyan>: <level>{message}</level>", level=level)
