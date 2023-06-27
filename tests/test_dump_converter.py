@@ -18,11 +18,11 @@ bin_fname_to_amount_single_block_writes = {  # amount of writes found by manuall
     "2023-06-19T16_52_37S927.csv": 4,
     "2023-06-19T16_52_51S561.csv": 4,
     "2023-06-19T16_52_58S817.csv": 4,
-    "2023-06-19T16_53_09S180.csv": 6,  # 6 without multi-block write
-    "2023-06-19T16_53_20S861.csv": 4,  # 4 without multi
-    "2023-06-19T16_53_30S004.csv": 5,  # 5 without multi
+    "2023-06-19T16_53_09S180.csv": 6,
+    "2023-06-19T16_53_20S861.csv": 4,
+    "2023-06-19T16_53_30S004.csv": 5,
     "2023-06-19T16_53_51S010.csv": 8,
-    "2023-06-19T16_54_09S942.csv": 7,  # 7 without multi
+    "2023-06-19T16_54_09S942.csv": 7,
 }
 
 
