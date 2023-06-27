@@ -4,21 +4,18 @@ import pandas as pd
 from time import time
 from loguru import logger
 
-from src.csv_exporter import Exporter
 from src.utils import two_digit_hex_str, concat_df_key_to_hex
 from src.crc import CRC
 from src.spi_command import Instruction, Command, Payload
 from src.spi_trace import Trace
 
 
-logger.remove()  # All configured handlers are removed
-# level can be ERROR for no logs, INFO for basic info on progress or DEBUG for ultimate info
-logger.add(sys.stderr, format="<green>{time:HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | "
-                              "<cyan>{function}</cyan>:<cyan>{line}</cyan>: <level>{message}</level>", level="DEBUG")
-
-
 class Dump:  # creating a Dump instance from binary may take a while for converting it to hex
-    def __init__(self, path: str, is_hex=False):
+    def __init__(self, path: str, level: str, is_hex=False):
+        logger.remove()  # All configured handlers are removed
+        logger.add(sys.stderr, format="<green>{time:HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | "
+                              "<cyan>{function}</cyan>:<cyan>{line}</cyan>: <level>{message}</level>", level=level)
+
         self.payload_len = 512
 
         logger.info("reading csv")
@@ -180,5 +177,3 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
     def export(self, path: str):
         self.hex.to_csv(path)
         logger.info(f"exported hex dump to {path}")
-
-
