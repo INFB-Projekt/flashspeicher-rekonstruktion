@@ -1,7 +1,7 @@
 class CRC:
 
     @staticmethod
-    def calc_crc8(hex_string, poly=0x07, init=0x00, ref_in=False, ref_out=False, xor_out=0x00):
+    def calc(hex_string, poly=0x07, init=0x00, ref_in=False, ref_out=False, xor_out=0x00):
 
         def reflect_byte(byte):
             return int('{:08b}'.format(byte)[::-1], 2)
