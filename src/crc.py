@@ -1,83 +1,45 @@
-import sys
-
-import crcmod
-from loguru import logger
-
-
 class CRC:
-    def __init__(self, log=None):
-        if log is None:
-            logger.remove()  # All configured handlers are removed
-            logger.add(sys.stderr, format="<green>{time:HH:mm:ss.SSS}</green> | <level>{level: <8}</level> | "
-                                          "<cyan>{function}</cyan>:<cyan>{line}</cyan>: <level>{message}</level>",
-                       level="ERROR")
 
     @staticmethod
-    def calc(data: str) -> str:
-        if data.startswith("0x"):
-            data = data.replace("0x", "")
-        crc_func = crcmod.predefined.mkPredefinedCrcFun('crc-8')
-        message = bytearray.fromhex(data)
-        # calc crc using crc8 algo
-        crc = crc_func(message)
-        # print(crc)
-        crc_hex = hex(crc)[2:].zfill(2)
-        # print("crc:", crc_hex)
-        return crc_hex.upper()
+    def calc_crc8(hex_string, poly=0x07, init=0x00, ref_in=False, ref_out=False, xor_out=0x00):
 
-    @staticmethod
-    def calc2(data: str):
-        # The polynomial used for SPI CRC is x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 + x^0.
-        polynomial = 16
+        def reflect_byte(byte):
+            return int('{:08b}'.format(byte)[::-1], 2)
 
-        # Initial CRC value is zero.
-        init_crc = 0x0000
+        data = bytes.fromhex(hex_string)
+        crc = init
 
-        # Create a CRC function using the polynomial and initial value.
-        crc_func = crcmod.mkCrcFun(polynomial, initCrc=init_crc, rev=True)
-
-        return crc_func(data)
-
-    @staticmethod
-    def calc3(data):
-        crc8 = crcmod.Crc(0x12F, initCrc=0)  # 0x12F = 100101111 = x^8 + x^5 + x^3 + x^2 + x + 1
-        crc8.update('123456789')
-        print(hex(crc8.crcValue))
-
-    @staticmethod
-    def preprocess_data(data):
-        i = 0
-        output = []
-        while i < len(data) - 2:
-            output.append(int(data[i:i+2], 16))
-            i+= 2
-        print(output)
-        return output
-
-    @staticmethod
-    def calc4(data):
-        data = CRC.preprocess_data(data)
-        crc = 0x00
         for byte in data:
+            if ref_in:
+                byte = reflect_byte(byte)
+
             crc ^= byte
             for _ in range(8):
                 if crc & 0x80:
-                    crc = (crc << 1) ^ 0x07
+                    crc = (crc << 1) ^ poly
                 else:
-                    crc = crc << 1
-        print(crc)
-        return crc
+                    crc <<= 1
+                crc &= 0xFF
+
+        if ref_out:
+            crc = reflect_byte(crc)
+
+        return f"0x{crc ^ xor_out:02X}"
 
     @staticmethod
-    def is_valid(data: str, crc: str) -> bool:
-        logger.debug(f"trying to validate crc of {data}")
-        logger.debug(f"crc should be {crc}")
-        data = data.replace("0x", "")
-        crc = crc.replace("0x", "").lower()
-        calculated_crc = CRC.calc(data).lower()
-        logger.debug(f"calculated crc: {calculated_crc}")
-        return crc == calculated_crc
+    def isValid(data: str) -> bool:
+        crc = "0x"+data[-2:]
+        data = data[2:-2]
+        # denke aber so besser
+        crc_object = CRC()
+        calculated_crc = crc_object.calc_crc8(data)
+
+        if crc.upper() == calculated_crc.upper():
+            return True
+        else:
+            return False
 
 
 if __name__ == "__main__":
-    CRC.calc("2e202020202020202020201000009d8ecc56cc5600009d8ecc568f00000000002e2e2020202020202020201000009d8ecc56cc5600009d8ecc56000000000000e56500780061006d0070000f005a6c0065002e0074007800740000000000ffffe558414d504c45205458542000009d8ecc56cc5600009d8ecc56000000000000e5780074000000ffffffff0f00c8ffffffffffffffffffffffff0000ffffffffe5720065006e0061006d000f00c865006400460069006c00650000002e007400e5454e414d457e31545854200000938ecc56cc560000938ecc568e000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")
+    hardware_trace_1 = "0xEEC1020EC6AC1D1F224AA126128ED3334E4E02C5DC3F3AD42A023B77482F0FBB3D370CC144CB456D423F2037FCA8B5F3F134F1CA409AC2BE5C062C23A82B14E7F973B3A27A3786AB1A48405741EC05ED6D9E7068C3768DE3DE82166E5694EA76361C0D21EA0D3330BDF6DDB2F696A733DA890C627395B514B0580A7ED3A56EE618AAE994145CFF97329E2081F9134BB8D98A75D39F75823B0DE9E3879101A72286E3F27F7E9329BE9C6E9FB84820CC8C69AF24D31C1DECB3DF0835D47EC40F177C00B38D9271ED0D5196A1CAABDCAFFDB2A29788C955422C6B551F7CFFBA321E1B19EAA208C60B5D4B2A19F32CE25CA14FD45B2F1647CED8BC4A110F0C766F5C9D5145933E52B76AB6F516E832B87E925C315CAEEE5338D1AB0968A5207D34EE05B59168892A7DEF84F7EB970314D0A627061208AF92295F231D919E94E1641ED742A57F7EB628F0A05ED7E4EEA85EED754C273624EBDFA6D0F9A90C8C8D472D7CC38A50B0DDB3A047DE4FC2928DA23C97F6678AC08648615EE4560DDE733D4D9AFDF3667E2C65181BEFD852E986B5BE92F5A6D9F2D9630A1653E57D56001E8FF342A87C4721A08ADE25F2FB2021A6F58F748475C89D2343226705A650FE83522061D4A17017C3EC9DB7AB8940D8BC6296B74336C195DF6C0EBC8594AC9DF3ED429ACE767A3072DB23F2B7B939F6A4DC3C3126252753FB117D81B306F10B16A339"
+    print(CRC.isValid(hardware_trace_1))    #rückgabewert = true
