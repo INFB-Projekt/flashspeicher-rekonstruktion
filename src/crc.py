@@ -27,7 +27,7 @@ class CRC:
         return f"0x{crc ^ xor_out:02X}"
 
     @staticmethod
-    def isValid(data: str) -> bool:
+    def is_valid(data: str) -> bool:
         crc = "0x"+data[-2:]
         data = data[2:-2]
         # denke aber so besser
