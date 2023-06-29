@@ -20,16 +20,13 @@ def process_arguments():
 
     date_obj = datetime.datetime.strptime(date_string, "%d.%m.%Y")
     time_obj = datetime.datetime.strptime(time_string, "%H:%M:%S")
-    datetime_reconstruction_timestamp = datetime.datetime.combine(date_obj.date(), time_obj.time())
-
-    reconstruction_timestamp = int(datetime_reconstruction_timestamp.timestamp()) * 1000
+    reconstruction_timestamp = datetime.datetime.combine(date_obj.date(), time_obj.time())
     # YYYY-MM-DDThh_mm_ssSmmm
-
 
 def convert_to_date_time(csv_list):
     datetime_list = []
     for csv_file in csv_list:
-        datetime_list.append(datetime.datetime.strptime(csv_file[:-4], "%y-%m-%dT%H_%M_%SS%f"))
+        datetime_list.append(datetime.datetime.strptime(csv_file[:-4], "%Y-%m-%dT%H_%M_%SS%f"))
     datetime_list.sort()
     return datetime_list
 
@@ -37,16 +34,15 @@ def convert_to_date_time(csv_list):
 # find correct csv file
 def find_csv_file(csv_name_list):
     global reconstruction_timestamp
-    global datetime_reconstruction_timestamp
     datetime_timestamp_list = convert_to_date_time(csv_name_list)
 
     target_csv = ""
-    if (datetime_reconstruction_timestamp < datetime_timestamp_list[0]):
+    if (reconstruction_timestamp < datetime_timestamp_list[0]):
         raise Exception("Timestamp too early to reconstruct")
     for trace_timestamp in datetime_timestamp_list:
 
-        if (datetime_reconstruction_timestamp > trace_timestamp):
-            target_csv = trace_timestamp.strftime("%y-%m-%dT%H_%M_%SS%f")[:-3] + ".csv"
+        if (reconstruction_timestamp > trace_timestamp):
+            target_csv = trace_timestamp.strftime("%Y-%m-%dT%H_%M_%SS%f")[:-3] + ".csv"
         else:
             break
     return target_csv
@@ -54,20 +50,20 @@ def find_csv_file(csv_name_list):
 
 # find correct row in csv file
 def find_target_row(target_csv, path_dest_csv):
-    global datetime_reconstruction_timestamp
+    global reconstruction_timestamp
     target_row = 0
-    dt_target_csv = datetime.datetime.strptime(target_csv[:-4], "%y-%m-%dT%H_%M_%SS%f")
+    dt_target_csv = datetime.datetime.strptime(target_csv[:-4], "%Y-%m-%dT%H_%M_%SS%f")
 
     with open(path_dest_csv, "r") as csvfile:
         reader = csv.reader(csvfile, delimiter=";")
         next(reader)  # skip the first line in each CSV file
 
-        if (datetime_reconstruction_timestamp < dt_target_csv):
+        if (reconstruction_timestamp < dt_target_csv):
             raise Exception("Timestamp too early")
 
         for row in reader:
             current_row_timestamp = dt_target_csv + datetime.timedelta(seconds=float(row[0]))
-            if (datetime_reconstruction_timestamp > current_row_timestamp):
+            if (reconstruction_timestamp > current_row_timestamp):
                 target_row += 1
             else:
                 break
