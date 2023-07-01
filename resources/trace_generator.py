@@ -2,7 +2,7 @@ from random import randint
 import csv
 
 
-class command_package:
+class CommandPackage:
     command_byte: str
     addr_1: str
     addr_2: str
@@ -11,7 +11,7 @@ class command_package:
     crc: str
 
 
-class data_package:
+class DataPackage:
     start_token = "0xfe"
     data = []
     crc: str
@@ -23,8 +23,8 @@ def generate():
     csv_writer.writerow(["Time [s]", "Channel 0", "Channel 1", "Channel 2"])  # Channel 0 = MISO, Channl 1 = MOSI
 
     for i in range(5):
-        cp = command_package()
-        dp = data_package()
+        cp = CommandPackage()
+        dp = DataPackage()
 
         cp.command_byte = hex(88)
         cp.addr_1 = hex(randint(0, 255))
@@ -41,7 +41,7 @@ def generate():
     csv_file.close()
 
 
-def write_csv(cp: command_package, dp: data_package, csv_writer):
+def write_csv(cp: CommandPackage, dp: DataPackage, csv_writer):
     for i in range(randint(0, 2)):
         write_bits("0xff", "0xff", csv_writer)
 
@@ -86,4 +86,5 @@ def write_bits(miso, mosi, csv_writer):
     csv_writer.writerows(rows)
 
 
-generate()
+if __name__ == "__main__":
+    generate()
