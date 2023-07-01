@@ -1,8 +1,12 @@
-import os
 import pytest
-from src.spi_trace import Trace
-from src.csv_exporter import Exporter
-from src.spi_command import Command, Instruction, Payload
+
+import os
+import sys
+sys.path.append('./src/')
+
+from spi_trace import Trace
+from csv_exporter import Exporter
+from spi_command import Command, Instruction, Payload
 from datetime import datetime
 
 
