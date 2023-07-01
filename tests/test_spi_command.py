@@ -1,6 +1,9 @@
 import pytest
-from src.spi_command import Command, Instruction, Payload
-from src.crc import CRC
+import sys
+sys.path.append('./src/')
+
+from spi_command import Command, Instruction, Payload
+from crc import CRC
 
 # help functions
 def get_correct_command_instance(rel_time: float) -> Command:
@@ -9,7 +12,7 @@ def get_correct_command_instance(rel_time: float) -> Command:
     return Command(relative_time=rel_time, instruction=instruction, payload=payload)
 
 def calculate_correct_crc(hexstring : str) -> str:
-    return "0x" + CRC.calc(hexstring).lower()
+    return CRC.calc(hexstring).lower()
 
 
 def test_instruction_correct_init():

@@ -63,12 +63,15 @@ class CRC:
 
     @staticmethod
     def calc(data):
+        if data.startswith("0x"):
+            data = data[2:]
         if len(data) > 100:
             return CRC.calc_crc16(data)
         return CRC.calc_crc8(data)
 
     @staticmethod
     def is_valid(data: str, crc: str):
+        logger.debug(crc)
         crc = (crc if crc.startswith("0x") else "0x" + crc).lower()
         logger.debug(f"trying to validate crc of {data}")
         logger.debug(f"crc should be {crc}")

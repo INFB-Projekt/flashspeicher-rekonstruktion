@@ -1,6 +1,10 @@
 import pytest
-from src.spi_trace import Trace
-from src.spi_command import Command, Instruction, Payload
+
+import sys
+sys.path.append('./src/')
+
+from spi_trace import Trace
+from spi_command import Command, Instruction, Payload
 
 
 def test_correct_init_trace():
