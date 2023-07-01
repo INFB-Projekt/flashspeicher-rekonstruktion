@@ -1,13 +1,12 @@
 import sys
-import os
 import pandas as pd
 from time import time
 from loguru import logger
 
-from src.utils import two_digit_hex_str, concat_df_key_to_hex
-from src.crc import CRC
-from src.spi_command import Instruction, Command, Payload
-from src.spi_trace import Trace
+from utils import two_digit_hex_str, concat_df_key_to_hex, get_timestamp_from_path
+from crc import CRC
+from spi_command import Instruction, Command, Payload
+from spi_trace import Trace
 
 
 class Dump:  # creating a Dump instance from binary may take a while for converting it to hex
@@ -27,18 +26,12 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
             self.hex = self._to_hex()
         
         try:
-            self.trace = Trace(self._get_timestamp_from_path(path))
+            self.trace = Trace(get_timestamp_from_path(path))
         except ValueError as e:
             # ValueError-Exception contains given datetime string and expected datetime format 
             logger.debug(str(e))
             logger.info("set the time of the trace to the current time")
             self.trace = Trace(time())
-
-    def _get_timestamp_from_path(self, path : str) -> str:
-        filename = os.path.basename(path)
-        # remove extension from filename to get the timestamp
-        return os.path.splitext(filename)[0]
-        
 
     def _to_hex(self) -> pd.DataFrame:
         self.binary["Channel 2"] = pd.to_numeric(self.binary["Channel 2"], errors='raise').astype('Int32')
@@ -110,7 +103,7 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
         else:
             logger.success(f"single-block write at {time} seems valid, adding to trace")
         instruction = Instruction(opcode, params,
-                                  CRC.calc(opcode + params[2:]))  # TODO: use actual crc here, once crc function works
+                                  CRC.calc(opcode[2:] + params[2:]))  # TODO: use actual crc here, once crc function works
         command = Command(time, instruction, payloads)
         self.trace.append(command)
 
@@ -131,7 +124,7 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
                 payloads.append(Payload(payload, CRC.calc(payload)))
             start_token_loc = self.get_start_token_loc(start_token_loc + self.payload_len + 2, "0xfc")  # 2 byte crc
         if len(payloads) < 1:
-            logger.debug("not a single valid payload")
+            logger.debug(f"not a single valid payload for proposed multi block write at {row['time']}")
             return
         self.add_write(index, payloads, multi=True)
 
@@ -149,11 +142,9 @@ class Dump:  # creating a Dump instance from binary may take a while for convert
         except KeyError:
             logger.debug("Exceeded dataframe length when trying to get CRC")
             return
-        is_valid_crc = CRC.is_valid(payload, crc)
-        # is_valid_crc = (self.hex.loc[start_token_loc + payload_len + 1]["MOSI"] == "0x00")  # TODO: use this instead of the line above to analyze example dumps from resources/gen.py (example dumps only have single block writes)
-        is_valid_crc = True  # TODO: delete this override once CRC.calc() works correctly
-
-        if is_valid_crc:
+        has_valid_crc = CRC.is_valid(payload, crc)
+        has_valid_crc = True  # TODO: delete this override once CRC.calc() works correctly
+        if has_valid_crc:
             self.add_write(index, [Payload(payload, CRC.calc(payload))], multi=False)
         else:
             logger.debug(f"invalid crc for potential write at relative time: {row['time']}, skipping")

@@ -1,4 +1,4 @@
-from src.crc import CRC
+from crc import CRC
 
 
 class Instruction:

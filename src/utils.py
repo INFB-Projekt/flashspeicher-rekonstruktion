@@ -1,3 +1,6 @@
+import os
+
+
 # bypass hex() returning 3-digit numbers (e.g. 0x0 instead of 0x00). Needed for conversion to bytes datatype
 def two_digit_hex_str(number: int):
     res = str(hex(number))
@@ -15,3 +18,9 @@ def concat_df_key_to_hex(df, key):
     for _, x in df.iterrows():
         hex += x[key][2:]
     return hex
+
+
+def get_timestamp_from_path(path: str) -> str:
+    filename = os.path.basename(path)
+    # remove extension from filename to get the timestamp
+    return os.path.splitext(filename)[0]

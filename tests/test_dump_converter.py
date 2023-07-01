@@ -1,5 +1,8 @@
+import sys
 import pytest
-from src.dump_converter import *
+sys.path.append('./src/')
+
+from dump_converter import *
 
 
 # test single- and multi-block writes separately to better see where the error would be

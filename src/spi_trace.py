@@ -1,11 +1,12 @@
 from collections.abc import Iterable
 from datetime import datetime
+from typing import Union
 
-from src.spi_command import Command
+from spi_command import Command
 
 
 class Trace(list):
-    def __init__(self, start_time : float) -> None:
+    def __init__(self, start_time: Union[int, float, str]) -> None:
         super().__init__()
         # float, int -> epoch time, convert to datetime string
         if isinstance(start_time, (float, int)):
@@ -13,7 +14,6 @@ class Trace(list):
         # str -> datetime string, validate format, raise exception if it does not match
         elif isinstance(start_time, str):
             self.time = self._validate_datetimestr_format(start_time, "%Y-%m-%dT%H_%M_%SS%f")
-
 
     def _validate_datetimestr_format(self, datetime_string : str, format_string : str) -> str:
         try:

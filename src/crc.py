@@ -1,6 +1,5 @@
-import sys
-import crcmod
 from loguru import logger
+import sys
 
 
 class CRC:
@@ -12,71 +11,68 @@ class CRC:
                        level="ERROR")
 
     @staticmethod
-    def calc(data: str) -> str:
-        if data.startswith("0x"):
-            data = data.replace("0x", "")
-        crc_func = crcmod.predefined.mkPredefinedCrcFun('crc-8')
-        message = bytearray.fromhex(data)
-        # calc crc using crc8 algo
-        crc = crc_func(message)
-        # print(crc)
-        crc_hex = hex(crc)[2:].zfill(2)
-        # print("crc:", crc_hex)
-        return crc_hex.upper()
+    def reflect_byte(byte):
+        return int('{:08b}'.format(byte)[::-1], 2)
 
     @staticmethod
-    def calc2(data: str):
-        # The polynomial used for SPI CRC is x^15 + x^14 + x^13 + x^12 + x^11 + x^10 + x^9 + x^8 + x^7 + x^6 + x^5 + x^4 + x^3 + x^2 + x^1 + x^0.
-        polynomial = 16
+    def calc_crc8(hex_string, poly=0x07, init=0x00, ref_in=False, ref_out=False, xor_out=0x00):
+        data = bytes.fromhex(hex_string)
+        crc = init
 
-        # Initial CRC value is zero.
-        init_crc = 0x0000
-
-        # Create a CRC function using the polynomial and initial value.
-        crc_func = crcmod.mkCrcFun(polynomial, initCrc=init_crc, rev=True)
-
-        return crc_func(data)
-
-    @staticmethod
-    def calc3(data):
-        crc8 = crcmod.Crc(0x12F, initCrc=0)  # 0x12F = 100101111 = x^8 + x^5 + x^3 + x^2 + x + 1
-        crc8.update('123456789')
-        print(hex(crc8.crcValue))
-
-    @staticmethod
-    def preprocess_data(data):
-        i = 0
-        output = []
-        while i < len(data) - 2:
-            output.append(int(data[i:i+2], 16))
-            i+= 2
-        print(output)
-        return output
-
-    @staticmethod
-    def calc4(data):
-        data = CRC.preprocess_data(data)
-        crc = 0x00
         for byte in data:
+            if ref_in:
+                byte = CRC.reflect_byte(byte)
+
             crc ^= byte
             for _ in range(8):
                 if crc & 0x80:
-                    crc = (crc << 1) ^ 0x07
+                    crc = (crc << 1) ^ poly
                 else:
-                    crc = crc << 1
-        print(crc)
-        return crc
+                    crc <<= 1
+                crc &= 0xFF
+
+        if ref_out:
+            crc = CRC.reflect_byte(crc)
+
+        return f"0x{crc ^ xor_out:02X}"
 
     @staticmethod
-    def is_valid(data: str, crc: str) -> bool:
+    def calc_crc16(hex_string, poly=0x8005, init=0x0000, ref_in=True, ref_out=True, xor_out=0x0000):
+        def reflect_byte(byte):
+            return int('{:08b}'.format(byte)[::-1], 2)
+
+        data = bytes.fromhex(hex_string)
+        crc = init
+
+        for byte in data:
+            if ref_in:
+                byte = reflect_byte(byte)
+
+            crc ^= (byte << 8)
+            for _ in range(8):
+                if crc & 0x8000:
+                    crc = (crc << 1) ^ poly
+                else:
+                    crc <<= 1
+                crc &= 0xFFFF
+
+        if ref_out:
+            crc = reflect_byte(crc >> 8) | (reflect_byte(crc & 0xFF) << 8)
+
+        return f"0x{crc ^ xor_out:04X}"
+
+    @staticmethod
+    def calc(data):
+        if len(data) > 100:
+            return CRC.calc_crc16(data)
+        return CRC.calc_crc8(data)
+
+    @staticmethod
+    def is_valid(data: str, crc: str):
+        crc = (crc if crc.startswith("0x") else "0x" + crc).lower()
         logger.debug(f"trying to validate crc of {data}")
         logger.debug(f"crc should be {crc}")
-        data = data.replace("0x", "")
-        crc = crc.replace("0x", "").lower()
         calculated_crc = CRC.calc(data).lower()
         logger.debug(f"calculated crc: {calculated_crc}")
+
         return crc == calculated_crc
-
-
-if __name__ == "__main__":
-    CRC.calc("2e202020202020202020201000009d8ecc56cc5600009d8ecc568f00000000002e2e2020202020202020201000009d8ecc56cc5600009d8ecc56000000000000e56500780061006d0070000f005a6c0065002e0074007800740000000000ffffe558414d504c45205458542000009d8ecc56cc5600009d8ecc56000000000000e5780074000000ffffffff0f00c8ffffffffffffffffffffffff0000ffffffffe5720065006e0061006d000f00c865006400460069006c00650000002e007400e5454e414d457e31545854200000938ecc56cc560000938ecc568e000a000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000")
