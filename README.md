@@ -7,8 +7,20 @@
 
 
 ## Usage
+
+### trace_analysis_main.py
+This script runs all necessary sub-scripts for filtering all type of write commands. Saves the filtered trace to `resources/filtered_trace`.
+When executing the script it is possible to set multiple flags for some options.
+#### Excecute from command line (example):
+````
+python trace_analysis_main.py --fname 2023-06-19T16_52_37S927.csv --hex --logger DEBUG
+````
+#### for further information on how to use available flags run:
+````
+python trace_analysis_main.py --help
+````
+
 ### sd_card_image_generator.py
-#### Description:
 This script creates and writes to a text file. It can also optionally automatically create a image after each step. It is used to easily create a predictable trace for testing purposes.
 #### Execute from command line:
 ````
@@ -20,7 +32,6 @@ python sd_card_image_generator.py --help
 ````
 
 ### trace_reconstruction.py
-#### Description:
 This script offers a convenient and efficient way to reconstruct data given a SD-Card image and a folder of CSV trace files based on a user-specified timestamp.
 #### Execute from command line:
 ````
