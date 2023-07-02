@@ -15,7 +15,7 @@ When executing the script it is possible to set multiple flags for some options.
 ````
 python trace_analysis_main.py --fname 2023-06-19T16_52_37S927.csv --hex --logger DEBUG
 ````
-### for further information on how to use available flags run:
+#### for further information on how to use available flags run:
 ````
 python trace_analysis_main.py --help
 ````
