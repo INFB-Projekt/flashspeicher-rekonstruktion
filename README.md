@@ -7,22 +7,17 @@
 
 
 ## Usage
-### trace_generator.py
-This script genrates a dummy trace in binary and saves it in "resources/bin" as a csv.
-#### Execute from command line:
-````
-python3 trace_generator.py
-````
 
 ### trace_analysis_main.py
-This script runs all necessary sub-scripts for filtering all type of write commands. Saves the filtered trace to "resources/filtered_trace".
-When executing the script you can set multiple flags for some options.
-* --logger_level [ERROR, INFO or DEBUG]: ERROR = no logs, INFO = basic info (default), DEBUG = ultimate info
-* --hex: uses already converted hex files for analyzing, if this flag is not set it uses a trace in binary and converts it to hex
-* --fname [filename]: Filename of trace which should be analyzed
+This script runs all necessary sub-scripts for filtering all type of write commands. Saves the filtered trace to `resources/filtered_trace`.
+When executing the script it is possible to set multiple flags for some options.
 #### Excecute from command line (example):
 ````
-python3 trace_analysis_main.py --fname 2023-06-19T16_52_37S927.csv --hex --logger DEBUG
+python trace_analysis_main.py --fname 2023-06-19T16_52_37S927.csv --hex --logger DEBUG
+````
+### for further information on how to use available flags run:
+````
+python trace_analysis_main.py --help
 ````
 
 ### sd_card_image_generator.py
